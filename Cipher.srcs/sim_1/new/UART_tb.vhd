@@ -87,15 +87,20 @@ w_data<=(others=>'0');
 wait for clock_time;
 reset<='0';
 rx<='1';
-wait for clock_time;
+wait for clock_time*10;
 rx<='0';
 wait for clock_time*1000;
 rx<='1';
-wait for clock_time*5;
+wait for clock_time*10;
 rx<='0';
-wait for clock_time*3;
+wait for clock_time*10;
 rx<='1';
 wait for clock_time*10;
+rx<='0';
+wait for clock_time*10;
+rx<='1';
+wait for clock_time*100;
+
 
 
 

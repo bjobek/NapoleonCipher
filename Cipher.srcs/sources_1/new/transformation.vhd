@@ -54,7 +54,9 @@ signal data1,data2 : unsigned (4 downto 0);
 signal n : unsigned(4 downto 0);
 constant alphaOffset : unsigned(5 downto 0) := "011001";
 constant KEYSIZE : unsigned(5 downto 0) := "010001";
-signal tmp,tmp2 : unsigned (5 downto 0);
+signal tmp : unsigned (5 downto 0);
+
+
 begin
 
 
@@ -64,6 +66,9 @@ process(clk)
 begin
 data1<=unsigned(msgData);
 data2<=unsigned(keyData);
+
+
+
 if (clr = '1') then
 
 --data1 <= (others =>'0');
@@ -83,12 +88,15 @@ elsif(rising_edge(clk)) then
 --if(tmp = 26) then
 --tmp <= "000000";
 --end if;
+--------------------
 if (((data2 + (alphaOffset - data1)))>= 26) then
 tmp<=(((data2 + (alphaOffset - data1)))-26);
 else
 tmp<=(((data2 + (alphaOffset - data1))));
-end if;
 
+
+end if;
+--tmp <= (to_integer(data2) + (to_integer(alphaOffset) - to_integer(data1))) mod to
 
 --tmp<= (tmp mod alphaMod);
 --outData<=std_logic_vector(tmp(4 downto 0));

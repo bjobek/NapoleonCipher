@@ -52,7 +52,9 @@ process(clk,reset)
 begin
     if (reset='1') then
         r_reg<= (others=>'0');
-    elsif(r_reg="101000110") then
+--    elsif(r_reg="101000110") then
+--        r_reg<= (others=>'0');
+ elsif(r_reg="000001010") then
         r_reg<= (others=>'0');
     elsif (clk'event and clk='1') then
         r_reg <= r_next;
@@ -63,6 +65,6 @@ end process;
 r_next <= r_reg+1;
 -- output logic
 q <= std_logic_vector(r_reg);
-max_tick <='1' when r_reg=("101000110") else '0';
-
+--max_tick <='1' when r_reg=("101000110") else '0';
+max_tick <='1' when r_reg=("00001010") else '0';
 end Behavioral;

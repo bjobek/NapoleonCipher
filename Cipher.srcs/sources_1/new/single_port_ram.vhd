@@ -7,14 +7,14 @@ entity single_port_ram is
 	(
 		data	: in std_logic_vector(7 downto 0);
 		addr	: in natural range 0 to 63;
-		we		: in std_logic := '1';
+		we		: in std_logic := '1'; -- write enable
 		clk		: in std_logic;
 		q		: out std_logic_vector(7 downto 0)
 	);
 	
 end entity;
 
-architecture rtl of single_port_ram is
+architecture behavioral of single_port_ram is
 
 	-- Build a 2-D array type for the RAM
 	subtype word_t is std_logic_vector(7 downto 0);
@@ -43,4 +43,4 @@ begin
 	
 	q <= ram(addr_reg);
 	
-end rtl;
+end behavioral;

@@ -35,11 +35,20 @@ entity cipherTopBlock is
     Port (-- keyData : in STD_LOGIC_VECTOR (4 downto 0);
            msgData : in STD_LOGIC_VECTOR (7 downto 0);
            clk,clr,en : in STD_LOGIC;
-           outData : out STD_LOGIC_VECTOR (4 downto 0));-- will be byte size later
+           outData : out STD_LOGIC_VECTOR (7 downto 0));-- will be byte size later
 end cipherTopBlock;
 
 architecture Behavioral of cipherTopBlock is
 
+
+
+component OffsetToAsciiConverter
+Port
+(
+offset : in std_logic_vector(4 downto 0);
+asciiCode : out std_logic_vector( 7 downto 0)
+);
+end component;
 
 
 component romA is
@@ -56,34 +65,64 @@ component romK is
   keyOffsetOut : out std_logic_vector(4 downto 0)
    );
 end component;
-component transformation is
-  Port (
+--component transformation is
+--  Port (
   
-  msgData : in std_logic_vector( 4 downto 0);
-  keyData : in std_logic_vector( 4 downto 0);
-  outData,nOut : out std_logic_vector( 4 downto 0);
-  clr : in std_logic;
-  clk : in std_logic;
-  en : in std_logic
-   );
+--  msgData : in std_logic_vector( 4 downto 0);
+--  keyData : in std_logic_vector( 4 downto 0);
+--  outData,nOut : out std_logic_vector( 4 downto 0);
+--  clr : in std_logic;
+--  clk : in std_logic;
+--  en : in std_logic
+--   );
+--end component;
+component cipherOperation is
+  Port ( keyChar : in STD_LOGIC_VECTOR (4 downto 0);
+           msgChar : in STD_LOGIC_VECTOR (4 downto 0);
+           transChar : out STD_LOGIC_VECTOR (4 downto 0);
+           en,clk : in std_logic
+           
+           );
+ end component;
+
+component modKeyCounter is
+  Port ( en : in STD_LOGIC;
+           clr,clk : in STD_LOGIC;
+           cntOut : out STD_LOGIC_VECTOR (4 downto 0));
 end component;
 
-
 signal msgInput, keyIncrement,keyData : std_logic_vector(4 downto 0);
-
+signal signalFromTransformToOutData : std_logic_vector(4 downto 0);
 begin
+
+keyCounter:modKeyCounter
+Port Map
+(
+en=>en, clr=>clr, clk=>clk, cntOut=>keyIncrement
+);
 
 asciiRom : romA
 port map(
 asciiCode => msgData, offset=>msgInput
 );
 
+offsetRom : OffsetToAsciiConverter
+port map(
+ offset=>signalFromTransformToOutData, asciiCode => outData
+);
+
+
 keyRom : romK
 port map(keyIndex => keyIncrement , keyOffsetOut => keyData);
 
-cipherTrans: transformation
-port map( clr=>clr, clk=>clk, en=>en, msgData=>msgInput, keyData =>keyData, nOut=>keyIncrement,outData=>outData
+--cipherTrans: transformation
+--port map( clr=>clr, clk=>clk, en=>en, msgData=>msgInput, keyData =>keyData, nOut=>keyIncrement,outData=>signalFromTransformToOutData
+--);
+cipherTrans: cipherOperation
+port map(
+keyChar=>keyData, msgChar=>msgInput, transChar=>signalFromTransformToOutData, en => en, clk=>clk
 );
+
 
 
 

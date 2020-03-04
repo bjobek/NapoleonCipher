@@ -82,7 +82,7 @@ stateNxt<=stateReg;
 sNxt<=sReg;
 bNxt<=bReg;
 nNxt<=nReg;
-
+rxDoneTick<='0';
 case stateReg is
 when idle =>
 if rx='0' then
@@ -92,9 +92,9 @@ end if;
 when start =>
 if (sTick = '1') then
     if sReg=7 then
-    stateNxt <= data;
-    sNxt <= (others=>'0');
-    nNxt <=(others=>'0');
+        stateNxt <= data;
+        sNxt <= (others=>'0');
+        nNxt <=(others=>'0');
     else
         sNxt <= sReg +1;
     end if;
